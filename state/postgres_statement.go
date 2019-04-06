@@ -11,6 +11,7 @@ import (
 type PostgresStatement struct {
 	Fingerprint  [21]byte // Fingerprint for a specific statement
 	Unidentified bool     // True if this represents an unidentified statement without query text
+	Ignored      bool     // True if this statement has been ignored and should not be reported
 }
 
 // PostgresStatementStats - Statistics from pg_stat_statements extension for a given

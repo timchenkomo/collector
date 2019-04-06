@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"hash/fnv"
+	"strings"
 
 	"github.com/guregu/null"
 	"github.com/lib/pq"
@@ -44,6 +45,10 @@ func statementStatsHelperExists(db *sql.DB, showtext bool) bool {
 	}
 
 	return enabled
+}
+
+func ignoredStatement(query string) bool {
+	return strings.HasPrefix(query, QueryMarkerSQL) || strings.HasPrefix(query, "DEALLOCATE") || query == "<insufficient privilege>"
 }
 
 func ResetStatements(logger *util.Logger, db *sql.DB) error {
@@ -165,12 +170,15 @@ func GetStatements(logger *util.Logger, db *sql.DB, postgresVersion state.Postgr
 
 		if showtext {
 			fp := util.FingerprintQuery(receivedQuery.String)
-			_, ok := statementTexts[fp]
-			if !ok {
-				statementTexts[fp] = util.NormalizeQuery(receivedQuery.String)
+			ignored := ignoredStatement(receivedQuery.String)
+			if !ignored {
+				_, ok := statementTexts[fp]
+				if !ok {
+					statementTexts[fp] = util.NormalizeQuery(receivedQuery.String)
+				}
 			}
 
-			statements[key] = state.PostgresStatement{Fingerprint: fp}
+			statements[key] = state.PostgresStatement{Fingerprint: fp, Ignored: ignored}
 		}
 		statementStats[key] = stats
 	}

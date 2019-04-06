@@ -1,18 +1,12 @@
 package transform
 
 import (
-	"strings"
 	"time"
 
 	"github.com/golang/protobuf/ptypes"
-	"github.com/pganalyze/collector/input/postgres"
 	snapshot "github.com/pganalyze/collector/output/pganalyze_collector"
 	"github.com/pganalyze/collector/state"
 )
-
-func ignoredStatement(query string) bool {
-	return strings.HasPrefix(query, postgres.QueryMarkerSQL) || strings.HasPrefix(query, "DEALLOCATE") || query == "<insufficient privilege>"
-}
 
 func groupStatements(statements state.PostgresStatementMap, statementTexts state.PostgresStatementTextMap, statsMap state.DiffedPostgresStatementStatsMap) map[statementKey]statementValue {
 	groupedStatements := make(map[statementKey]statementValue)
@@ -21,11 +15,8 @@ func groupStatements(statements state.PostgresStatementMap, statementTexts state
 		statement, exist := statements[sKey]
 		if !exist {
 			statement = state.PostgresStatement{Unidentified: true}
-		} else {
-			normalizedQuery, ok := statementTexts[statement.Fingerprint]
-			if ok && ignoredStatement(normalizedQuery) {
-				continue
-			}
+		} else if statement.Ignored {
+			continue
 		}
 
 		key := statementKey{
