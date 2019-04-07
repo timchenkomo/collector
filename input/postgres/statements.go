@@ -47,8 +47,12 @@ func statementStatsHelperExists(db *sql.DB, showtext bool) bool {
 	return enabled
 }
 
-func ignoredStatement(query string) bool {
-	return strings.HasPrefix(query, QueryMarkerSQL) || strings.HasPrefix(query, "DEALLOCATE") || query == "<insufficient privilege>"
+func collectorStatement(query string) bool {
+	return strings.HasPrefix(query, QueryMarkerSQL)
+}
+
+func insufficientPrivilege(query string) bool {
+	return query == "<insufficient privilege>"
 }
 
 func ResetStatements(logger *util.Logger, db *sql.DB) error {
@@ -170,15 +174,20 @@ func GetStatements(logger *util.Logger, db *sql.DB, postgresVersion state.Postgr
 
 		if showtext {
 			fp := util.FingerprintQuery(receivedQuery.String)
-			ignored := ignoredStatement(receivedQuery.String)
-			if !ignored {
+			stmt := state.PostgresStatement{Fingerprint: fp}
+			if insufficientPrivilege(receivedQuery.String) {
+				stmt.InsufficientPrivilege = true
+			} else if collectorStatement(receivedQuery.String) {
+				stmt.Collector = true
+				stmt.Fingerprint = util.FingerprintQuery("<pganalyze-collector>")
+			} else {
 				_, ok := statementTexts[fp]
 				if !ok {
 					statementTexts[fp] = util.NormalizeQuery(receivedQuery.String)
 				}
 			}
 
-			statements[key] = state.PostgresStatement{Fingerprint: fp, Ignored: ignored}
+			statements[key] = stmt
 		}
 		statementStats[key] = stats
 	}

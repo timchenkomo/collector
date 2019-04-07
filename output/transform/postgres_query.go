@@ -38,8 +38,14 @@ func upsertQueryReferenceAndInformation(s *snapshot.FullSnapshot, statementTexts
 	s.QueryReferences = append(s.QueryReferences, &newRef)
 
 	// Information
-	normalizedQuery := "<unidentified queryid>"
-	if !value.statement.Unidentified {
+	normalizedQuery := ""
+	if value.statement.Unidentified {
+		normalizedQuery = "<unidentified queryid>"
+	} else if value.statement.InsufficientPrivilege {
+		normalizedQuery = "<insufficient privilege>"
+	} else if value.statement.Collector {
+		normalizedQuery = "<pganalyze-collector>"
+	} else {
 		normalizedQuery, _ = statementTexts[key.fingerprint]
 	}
 	queryInformation := snapshot.QueryInformation{

@@ -15,8 +15,6 @@ func groupStatements(statements state.PostgresStatementMap, statementTexts state
 		statement, exist := statements[sKey]
 		if !exist {
 			statement = state.PostgresStatement{Unidentified: true}
-		} else if statement.Ignored {
-			continue
 		}
 
 		key := statementKey{

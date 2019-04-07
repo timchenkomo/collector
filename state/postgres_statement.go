@@ -9,9 +9,10 @@ import (
 // PostgresStatement - Specific kind of statement that has run one or multiple times
 // on the PostgreSQL server.
 type PostgresStatement struct {
-	Fingerprint  [21]byte // Fingerprint for a specific statement
-	Unidentified bool     // True if this represents an unidentified statement without query text
-	Ignored      bool     // True if this statement has been ignored and should not be reported
+	Fingerprint           [21]byte // Fingerprint for a specific statement
+	Unidentified          bool     // True if this represents an unidentified statement without query text
+	InsufficientPrivilege bool     // True if we're missing permissions to see the statement
+	Collector             bool     // True if this statement was produced by the pganalyze collector
 }
 
 // PostgresStatementStats - Statistics from pg_stat_statements extension for a given
