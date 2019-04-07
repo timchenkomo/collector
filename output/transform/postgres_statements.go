@@ -6,6 +6,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	snapshot "github.com/pganalyze/collector/output/pganalyze_collector"
 	"github.com/pganalyze/collector/state"
+	"github.com/pganalyze/collector/util"
 )
 
 func groupStatements(statements state.PostgresStatementMap, statementTexts state.PostgresStatementTextMap, statsMap state.DiffedPostgresStatementStatsMap) map[statementKey]statementValue {
@@ -14,7 +15,7 @@ func groupStatements(statements state.PostgresStatementMap, statementTexts state
 	for sKey, stats := range statsMap {
 		statement, exist := statements[sKey]
 		if !exist {
-			statement = state.PostgresStatement{Unidentified: true}
+			statement = state.PostgresStatement{Unidentified: true, Fingerprint: util.FingerprintQuery("<unidentified queryid>")}
 		}
 
 		key := statementKey{
