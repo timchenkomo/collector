@@ -26,7 +26,6 @@ func processActivityForServer(server state.Server, globalCollectionOpts state.Co
 			return false, errors.Wrap(err, "could not get default grant for activity snapshot")
 		}
 
-		// FIXME: Persist this somewhere
 		if !newGrant.Config.EnableActivity {
 			if globalCollectionOpts.TestRun {
 				logger.PrintError("  Failed - Activity snapshots disabled by pganalyze")

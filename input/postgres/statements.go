@@ -183,7 +183,7 @@ func GetStatements(logger *util.Logger, db *sql.DB, postgresVersion state.Postgr
 			} else {
 				_, ok := statementTexts[fp]
 				if !ok {
-					statementTexts[fp] = util.NormalizeQuery(receivedQuery.String)
+					statementTexts[fp] = receivedQuery.String
 				}
 			}
 
@@ -194,6 +194,10 @@ func GetStatements(logger *util.Logger, db *sql.DB, postgresVersion state.Postgr
 	err = rows.Err()
 	if err != nil {
 		return nil, nil, nil, err
+	}
+
+	for fp, text := range statementTexts {
+		statementTexts[fp] = util.NormalizeQuery(text)
 	}
 
 	return statements, statementTexts, statementStats, nil

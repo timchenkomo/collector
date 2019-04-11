@@ -43,7 +43,9 @@ func CollectFull(server state.Server, connection *sql.DB, collectionOpts state.C
 	}
 
 	ps.LastStatementStatsAt = time.Now()
+	postgres.SetStatementTimeout(connection, 120000)
 	ts.Statements, ts.StatementTexts, ps.StatementStats, err = postgres.GetStatements(logger, connection, ts.Version, true, isHeroku)
+	postgres.SetDefaultStatementTimeout(connection, logger, server)
 	if err != nil {
 		logger.PrintError("Error collecting pg_stat_statements")
 		return

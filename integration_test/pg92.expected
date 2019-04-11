@@ -1,4 +1,3 @@
-"<pganalyze-collector>"
 "begin"
 "commit"
 "INSERT INTO pgbench_history (tid, bid, aid, delta, mtime) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP);"
@@ -10,3 +9,4 @@
 "UPDATE pgbench_tellers SET tbalance = tbalance + ? WHERE tid = ?;"
 "vacuum pgbench_branches"
 "vacuum pgbench_tellers"
+"<pganalyze-collector>"

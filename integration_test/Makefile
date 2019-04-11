@@ -20,7 +20,7 @@ pg92:
 		jq '.collectorErrors' pg92_2.json; \
 		exit 1; \
 	fi
-	jq '.queryInformations[].normalizedQuery' pg92_2.json | sort -f > pg92.out
+	jq '.queryInformations[].normalizedQuery' pg92_2.json | sort --version-sort -f > pg92.out
 	diff -Naur pg92.expected pg92.out && echo 'success'
 
 pg93:
@@ -38,7 +38,7 @@ pg93:
 		jq '.collectorErrors' pg93_2.json; \
 		exit 1; \
 	fi
-	jq '.queryInformations[].normalizedQuery' pg93_2.json | sort -f > pg93.out
+	jq '.queryInformations[].normalizedQuery' pg93_2.json | sort --version-sort -f > pg93.out
 	diff -Naur pg93.expected pg93.out && echo 'success'
 
 pg94:
@@ -56,7 +56,7 @@ pg94:
 		jq '.collectorErrors' pg94_2.json; \
 		exit 1; \
 	fi
-	jq '.queryInformations[].normalizedQuery' pg94_2.json | sort -f > pg94.out
+	jq '.queryInformations[].normalizedQuery' pg94_2.json | sort --version-sort -f > pg94.out
 	diff -Naur pg94.expected pg94.out && echo 'success'
 
 pg95:
@@ -74,7 +74,7 @@ pg95:
 		jq '.collectorErrors' pg95_2.json; \
 		exit 1; \
 	fi
-	jq '.queryInformations[].normalizedQuery' pg95_2.json | sort -f > pg95.out
+	jq '.queryInformations[].normalizedQuery' pg95_2.json | sort --version-sort -f > pg95.out
 	diff -Naur pg95.expected pg95.out && echo 'success'
 
 pg96:
@@ -92,7 +92,7 @@ pg96:
 		jq '.collectorErrors' pg96_2.json; \
 		exit 1; \
 	fi
-	jq '.queryInformations[].normalizedQuery' pg96_2.json | sort -f > pg96.out
+	jq '.queryInformations[].normalizedQuery' pg96_2.json | sort --version-sort -f > pg96.out
 	diff -Naur pg96.expected pg96.out && echo 'success'
 
 pg10:
@@ -110,7 +110,7 @@ pg10:
 		jq '.collectorErrors' pg10_2.json; \
 		exit 1; \
 	fi
-	jq '.queryInformations[].normalizedQuery' pg10_2.json | sort -f > pg10.out
+	jq '.queryInformations[].normalizedQuery' pg10_2.json | sort --version-sort -f > pg10.out
 	diff -Naur pg10.expected pg10.out && echo 'success'
 
 pg11:
@@ -128,5 +128,5 @@ pg11:
 		jq '.collectorErrors' pg11_2.json; \
 		exit 1; \
 	fi
-	jq '.queryInformations[].normalizedQuery' pg11_2.json | sort -f > pg11.out
+	jq '.queryInformations[].normalizedQuery' pg11_2.json | sort --version-sort -f > pg11.out
 	diff -Naur pg11.expected pg11.out && echo 'success'
