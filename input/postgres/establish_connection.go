@@ -71,7 +71,7 @@ func validateConnectionCount(connection *sql.DB, logger *util.Logger, maxCollect
 
 func setStatementTimeout(connection *sql.DB, logger *util.Logger, statementTimeoutMs int32) {
 	if statementTimeoutMs == 0 { // Default value
-		statementTimeoutMs = 30000
+		statementTimeoutMs = 60000
 	}
 
 	// Assume anything below 100ms to be set in error - its not reasonable to have our queries run faster than that

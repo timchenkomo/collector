@@ -191,6 +191,10 @@ func GetStatements(logger *util.Logger, db *sql.DB, postgresVersion state.Postgr
 		}
 		statementStats[key] = stats
 	}
+	err = rows.Err()
+	if err != nil {
+		return nil, nil, nil, err
+	}
 
 	return statements, statementTexts, statementStats, nil
 }
